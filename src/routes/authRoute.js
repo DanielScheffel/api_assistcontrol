@@ -5,6 +5,13 @@ import { validationMiddleware } from '../middlewares/validationMiddleware.js';
 
 const router = express.Router();
 
+router.get("/me", (req, res) => {
+    return res.status(200).json({
+        message: "Acesso autorizado",
+        user: req.user
+    })
+})
+
 router.post("/login",
     loginValidator,
     validationMiddleware,
