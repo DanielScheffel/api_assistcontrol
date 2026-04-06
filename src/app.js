@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import authRoute from './routes/authRoute.js';
+import userRoute from './routes/userRoute.js';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(helmet());
 
 app.use('/', authRoute);
+app.use('/users', userRoute);
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));

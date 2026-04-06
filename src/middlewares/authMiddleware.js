@@ -3,7 +3,7 @@ import 'dotenv/config';
 
 export function authMiddleware(req, res, next) {
 
-    const authHeader = res.headers.authorization;
+    const authHeader = req.headers.authorization;
 
     if(!authHeader) {
         return res.status(401).json({
