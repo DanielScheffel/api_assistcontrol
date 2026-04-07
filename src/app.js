@@ -18,7 +18,7 @@ app.use(cors());
 app.use(helmet());
 
 app.use('/', authRoute);
-app.use('/users', userRoute);
+app.use('/usuario', userRoute);
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));

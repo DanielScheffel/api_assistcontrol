@@ -1,5 +1,5 @@
 import express from 'express';
-import { userController } from '../controllers/userController.js';
+import { updateUserController, userController } from '../controllers/userController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { cadastroUsuarioValidator } from '../validators/userValidator.js';
@@ -13,6 +13,11 @@ router.post("/cadastro-usuario",
     cadastroUsuarioValidator,
     validationMiddleware,
     userController
+)
+
+router.put("/atualizar-usuario/:userID",
+    authMiddleware,
+    updateUserController
 )
 
 export default router;

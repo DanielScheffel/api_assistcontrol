@@ -29,3 +29,48 @@ export async function userModel(nome, email, senha_hash, tipo_usuario) {
         message: "Usuário cadastrado com sucesso"
     }
 }
+
+export async function updateUserModel({ userID, nome, email, senha_hash, tipo_usuario, usuarioLogado }) {
+
+    // const { nome, email, senha_hash, tipo_usuario } = dados;
+
+    const result = await pool.query(
+        "SELECT id_usuario, tipo_usuario FROM usuario WHERE id_usuario = $1",
+        [userID]
+    )
+
+    if(result.rows.length === 0){
+        throw new Error("Usuário não encontrado");
+    };
+
+    const userAlvo = result.rows[0];
+
+    // Permissões de atualização
+    if(usuarioLogado.tipo_usuario === "Funcionario"){
+        throw new Error("Funcionários não podem editar usuários. Solicite a um gerente ou administrador");
+    }
+
+    if(
+        usuarioLogado.tipo_usuario === "Gerente" &&
+        userAlvo.tipo_usuario === "Administrador"
+    ){
+        throw new Error("Gerentes não podem editar Administradores");
+    }
+
+//     console.log({
+//     nome,
+//     email,
+//     senha_hash,
+//     tipo_usuario,
+//     userID
+// });
+    const update = await pool.query(
+        `UPDATE usuario SET nome = COALESCE($1, nome), email = COALESCE($2, email),
+        senha_hash = COALESCE($3, senha_hash), tipo_usuario = COALESCE($4, tipo_usuario) WHERE id_usuario = $5
+        RETURNING id_usuario, nome, email, tipo_usuario`,
+        [nome, email, senha_hash, tipo_usuario, userID]
+    )
+    // console.log(update.rows);
+
+    return update.rows[0];
+}
