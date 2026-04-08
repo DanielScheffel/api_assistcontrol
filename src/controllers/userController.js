@@ -1,4 +1,4 @@
-import { updateUserModel, userModel } from "../models/userModel.js";
+import { updateStatusUserModel, updateUserModel, userModel } from "../models/userModel.js";
 
 
 export async function userController(req, res) {
@@ -35,6 +35,30 @@ export async function updateUserController(req, res) {
     } catch (error) {
         console.error("Erro ao atualizar usuário:", error);
 
+        return res.status(400).json({
+            message: error.message
+        })
+    }
+}
+
+export async function updateStatusUserController(req, res) {
+    
+    try {
+        const { userID } = req.params;
+        const { status } = req.body;
+        const usuarioLogado = req.user;
+
+        const usuario = await updateStatusUserModel({
+            userID,
+            status,
+            usuarioLogado
+        })
+
+        return res.status(200).json({
+            message: "Status do usuário "+userID+" atualizado com sucesso!!",
+            usuario
+        })
+    } catch (error) {
         return res.status(400).json({
             message: error.message
         })

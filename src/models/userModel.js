@@ -57,20 +57,35 @@ export async function updateUserModel({ userID, nome, email, senha_hash, tipo_us
         throw new Error("Gerentes não podem editar Administradores");
     }
 
-//     console.log({
-//     nome,
-//     email,
-//     senha_hash,
-//     tipo_usuario,
-//     userID
-// });
     const update = await pool.query(
         `UPDATE usuario SET nome = COALESCE($1, nome), email = COALESCE($2, email),
         senha_hash = COALESCE($3, senha_hash), tipo_usuario = COALESCE($4, tipo_usuario) WHERE id_usuario = $5
         RETURNING id_usuario, nome, email, tipo_usuario`,
         [nome, email, senha_hash, tipo_usuario, userID]
     )
-    // console.log(update.rows);
 
     return update.rows[0];
+}
+
+export async function updateStatusUserModel({ userID, status, usuarioLogado }) {
+
+    if(usuarioLogado.tipo_usuario !== "Administrador"){
+        throw new Error("Apenas administradores podem alterar status de usuário");
+    }
+
+    if(!["Ativo", "Inativo"].includes(status)) {
+        throw new Error("Status inválido");
+    }
+
+    const result = await pool.query(
+        `UPDATE usuario SET status = $1 WHERE id_usuario = $2
+        RETURNING id_usuario, nome, email, tipo_usuario, status`,
+        [status, userID]
+    )
+
+    if(result.rows.length === 0) {
+        throw new Error("Usuário não encontrado");
+    }
+
+    return result.rows[0];
 }
