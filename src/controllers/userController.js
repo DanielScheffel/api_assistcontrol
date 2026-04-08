@@ -1,4 +1,4 @@
-import { updateStatusUserModel, updateUserModel, userModel } from "../models/userModel.js";
+import { deleteUserModel, updateStatusUserModel, updateUserModel, userModel } from "../models/userModel.js";
 
 
 export async function userController(req, res) {
@@ -60,6 +60,27 @@ export async function updateStatusUserController(req, res) {
         })
     } catch (error) {
         return res.status(400).json({
+            message: error.message
+        })
+    }
+}
+
+export async function deleteUserController(req, res) {
+
+    const { userID } = req.params;
+
+    try {
+        const result = await deleteUserModel(userID, req.user);
+
+        return res.status(200).json(result);
+    } catch (error) {
+        if(error.message === "Usuário não encontrado") {
+            return res.status(404).json({
+                message: error.message
+            })
+        }
+
+        return res.status(500).json({
             message: error.message
         })
     }

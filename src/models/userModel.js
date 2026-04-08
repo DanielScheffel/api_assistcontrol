@@ -89,3 +89,28 @@ export async function updateStatusUserModel({ userID, status, usuarioLogado }) {
 
     return result.rows[0];
 }
+
+export async function deleteUserModel(userID, usuarioLogado) {
+
+    const user = await pool.query(
+        `SELECT id_usuario, tipo_usuario FROM usuario WHERE id_usuario = $1`,
+        [userID]
+    )
+
+    if(user.rows.length === 0) {
+        throw new Error("Usuário não encontrado");
+    }
+
+    if(usuarioLogado.tipo_usuario !== "Administrador") {
+        throw new Error("Apenas administradores podem deletar usuários");
+    }
+
+    await pool.query(
+        `DELETE FROM usuario WHERE id_usuario = $1`,
+        [userID]
+    )
+
+    return {
+        message: "Usuário deletado com sucesso"
+    }
+}
