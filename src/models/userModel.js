@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import pool from '../config/database.js';
-import bcrypt, { hash } from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 export async function userModel(nome, email, senha_hash, tipo_usuario) {
 
