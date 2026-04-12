@@ -101,7 +101,7 @@ export async function deleteUserModel(userID, usuarioLogado) {
         throw new Error("Usuário não encontrado");
     }
 
-    if(usuarioLogado.tipo_usuario !== "Administrador") {
+    if(usuarioLogado.tipo_usuario !== "Gerente" && usuarioLogado.tipo_usuario !== "Administrador") {
         throw new Error("Apenas administradores podem deletar usuários");
     }
 
