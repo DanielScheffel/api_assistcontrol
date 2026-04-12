@@ -17,11 +17,13 @@ router.post("/novo-fornecedor",
 
 router.put("/atualizar-fornecedor/:supplierID",
     authMiddleware,
+    adminMiddleware,
     updateSupplierController
 )
 
 router.delete("/deletar-fornecedor/:supplierID",
     authMiddleware,
+    adminMiddleware,
     deleteSupplierController
 )
 

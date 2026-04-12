@@ -17,16 +17,19 @@ router.post("/cadastro-usuario",
 
 router.put("/atualizar-usuario/:userID",
     authMiddleware,
+    adminMiddleware,
     updateUserController
 )
 
 router.put("/atualizar-status/:userID",
     authMiddleware,
+    adminMiddleware,
     updateStatusUserController
 )
 
 router.delete("/delete-usuario/:userID",
     authMiddleware,
+    adminMiddleware,
     deleteUserController
 )
 

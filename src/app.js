@@ -10,6 +10,7 @@ import morgan from 'morgan';
 import authRoute from './routes/authRoute.js';
 import userRoute from './routes/userRoute.js';
 import supplierRoute from './routes/supplierRoute.js';
+import categoryRoute from './routes/categoryRoute.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(helmet());
 app.use('/', authRoute);
 app.use('/usuario', userRoute);
 app.use('/fornecedor', supplierRoute);
+app.use('/categoria', categoryRoute);
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
