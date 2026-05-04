@@ -4,7 +4,7 @@ import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { lojaValidator } from '../validators/lojaValidator.js';
 import { validationMiddleware } from '../middlewares/validationMiddleware.js';
-import { lojaController } from '../controllers/lojaController.js';
+import { lojaController, updateLojaController } from '../controllers/lojaController.js';
 
 const router = express.Router();
 
@@ -14,6 +14,12 @@ router.post("/loja/nova-loja",
     lojaValidator,
     validationMiddleware,
     lojaController
+)
+
+router.put("/loja/editar-loja/:id_loja",
+    authMiddleware,
+    adminMiddleware,
+    updateLojaController
 )
 
 export default router;

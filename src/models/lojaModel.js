@@ -27,3 +27,31 @@ export async function lojaModel( loja_nome, cidade, uf, sigla, cnpj, usuarioLoga
         id: resultInsert.rows[0].id_loja
     }
 }
+
+export async function updateLojaModel( id_loja, loja_nome, cidade, uf, sigla, cnpj, usuarioLogado ) {
+
+    const result = await pool.query(
+        "SELECT id_loja FROM loja WHERE id_loja = $1",
+        [id_loja]
+    )
+
+    if(result.rows.length === 0) {
+        throw new Error("Loja não encontrada");
+    }
+
+    if(usuarioLogado.tipo_usuario === "Funcionario") {
+        throw new Error("Funcionários não podem editar lojas. Solicite a um gerente ou administrador");
+    }
+
+    await pool.query(
+        `UPDATE loja SET loja_nome = COALESCE($1, loja_nome),
+        cidade = COALESCE($2, cidade), uf = COALESCE($3, uf),
+        sigla = COALESCE($4, sigla), cnpj = COALESCE($5, cnpj)
+        WHERE id_loja = $6`,
+        [loja_nome, cidade, uf, sigla, cnpj, id_loja]
+    )
+
+    return { 
+        message: "Loja atualizada com sucesso"
+    }
+}
