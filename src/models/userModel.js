@@ -18,15 +18,17 @@ export async function userModel(nome, email, senha_hash, tipo_usuario) {
     };
 
     const hashPass = await bcrypt.hash(senha_hash, 10);
+    
 
     //Inserindo o usuário no banco de dados
     await pool.query(
-        `INSERT INTO usuario (nome, email, senha_hash, tipo_usuario, status) VALUES ($1, $2, $3, $4, $5)`,
+        `INSERT INTO usuario (nome, email, senha_hash, tipo_usuario, status) VALUES ($1, $2, $3, $4, $5) RETURNING id_usuario`,
         [nome, email, hashPass, tipo_usuario, "Ativo"]
     )
 
     return {
-        message: "Usuário cadastrado com sucesso"
+        message: "Usuário cadastrado com sucesso",
+        id: result.rows[0].id_usuario
     }
 }
 

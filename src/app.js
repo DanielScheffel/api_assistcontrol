@@ -11,6 +11,7 @@ import authRoute from './routes/authRoute.js';
 import userRoute from './routes/userRoute.js';
 import supplierRoute from './routes/supplierRoute.js';
 import categoryRoute from './routes/categoryRoute.js';
+import lojaRoute from './routes/lojaRoute.js';
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/', authRoute);
 app.use('/usuario', userRoute);
 app.use('/fornecedor', supplierRoute);
 app.use('/categoria', categoryRoute);
+app.use('/lojas', lojaRoute);
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
