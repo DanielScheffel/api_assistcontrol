@@ -1,5 +1,5 @@
 import { lojahasUsuarioModel } from "../models/lojahasUsuarioModel.js";
-import { lojaModel, updateLojaModel } from "../models/lojaModel.js";
+import { deleteLojaModel, lojaModel, updateLojaModel } from "../models/lojaModel.js";
 
 
 export async function lojaController(req, res) {
@@ -57,6 +57,27 @@ export async function updateLojaController(req, res) {
         })
     } catch (error) {
         res.status(400).json({
+            message: error.message
+        })
+    }
+}
+
+export async function deleteLojaController(req, res) {
+    try {
+        const { id_loja } = req.params;
+
+        const usuarioLogado = req.user;
+
+        await deleteLojaModel(
+            id_loja,
+            usuarioLogado
+        )
+
+        return res.status(200).json({
+            message: "Loja excluída com sucesso"
+        })
+    } catch (error) {
+        return res.status(400).json({
             message: error.message
         })
     }

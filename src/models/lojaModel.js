@@ -55,3 +55,28 @@ export async function updateLojaModel( id_loja, loja_nome, cidade, uf, sigla, cn
         message: "Loja atualizada com sucesso"
     }
 }
+
+export async function deleteLojaModel( id_loja, usuarioLogado ) {
+
+    const result = await pool.query(
+        "SELECT id_loja FROM loja WHERE id_loja = $1",
+        [id_loja]
+    )
+
+    if(result.rows.length === 0) {
+        throw new Error("Loja não encontrada");
+    }
+
+    if(usuarioLogado.tipo_usuario === "Funcionario") {
+        throw new Error("Funcionários não podem excluir lojas. Solicite a um gerente ou administrador");
+    }
+
+    await pool.query(
+        "DELETE FROM loja WHERE id_loja = $1",
+        [id_loja]
+    )
+
+    return { 
+        message: "Loja excluída com sucesso"
+    }
+}
