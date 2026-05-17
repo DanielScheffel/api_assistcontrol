@@ -1,6 +1,12 @@
 import "dotenv/config";
 import pool from "../config/database.js";
 
+export async function getCategoriesModel() {
+    const result = await pool.query("SELECT * FROM categoria_produto");
+
+    return result.rows;
+}
+
 export async function categoryModel( category ) {
 
     const result = await pool.query("SELECT * FROM categoria_produto WHERE categoria = $1", [category]);

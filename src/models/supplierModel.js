@@ -1,6 +1,12 @@
 import 'dotenv/config';
 import pool from "../config/database.js";
 
+export async function getSupplierModel() {
+    const result = await pool.query("SELECT * FROM fornecedor");
+
+    return result.rows;
+}
+
 export async function supplierModel( nome, contato, email, representante, usuarioLogado ) {
 
     //Verificando se a empresa já existe

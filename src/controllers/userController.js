@@ -1,5 +1,21 @@
-import { deleteUserModel, updateStatusUserModel, updateUserModel, userModel } from "../models/userModel.js";
+import { deleteUserModel, 
+    getUsersModel, 
+    updateStatusUserModel, 
+    updateUserModel, 
+    userModel } from "../models/userModel.js";
 
+export async function getUsersController(req, res) {
+
+    try {
+        const result = await getUsersModel();
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message
+        })
+    }
+}
 
 export async function userController(req, res) {
     

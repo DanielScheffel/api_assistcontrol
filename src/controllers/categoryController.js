@@ -1,5 +1,13 @@
-import { categoryModel, deleteCategoryModel } from "../models/categoryModel.js";
+import { categoryModel, 
+    deleteCategoryModel, 
+    getCategoriesModel } from "../models/categoryModel.js";
 
+export async function getCategoriesController(req, res) {
+    const result = await getCategoriesModel();
+
+    return res.status(200).json(result);
+
+}
 
 export async function categoryController( req, res) {
     const { categoria } = req.body;

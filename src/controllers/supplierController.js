@@ -1,5 +1,20 @@
-import { deleteSupplierModel, supplierModel, updateSupplierModel } from "../models/supplierModel.js";
+import { deleteSupplierModel, 
+    getSupplierModel, 
+    supplierModel, 
+    updateSupplierModel } from "../models/supplierModel.js";
 
+
+export async function getSuppliersController(req, res) {
+    try {
+        const result = await getSupplierModel();
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message
+        })
+    }
+}
 
 export async function supplierController(req, res) {
 

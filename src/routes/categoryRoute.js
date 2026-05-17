@@ -1,8 +1,15 @@
 import express from "express";
-import { categoryController, deleteCategoryController } from "../controllers/categoryController.js";
+import { categoryController, 
+    deleteCategoryController, 
+    getCategoriesController } from "../controllers/categoryController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
+
+router.get("/categorias",
+    authMiddleware,
+    getCategoriesController
+)
 
 router.post("/nova-categoria",
     authMiddleware,

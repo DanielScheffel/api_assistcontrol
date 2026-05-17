@@ -1,11 +1,21 @@
 import express from 'express';
-import { deleteUserController, updateStatusUserController, updateUserController, userController } from '../controllers/userController.js';
+import { deleteUserController, 
+    getUsersController, 
+    updateStatusUserController, 
+    updateUserController, 
+    userController } from '../controllers/userController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { cadastroUsuarioValidator } from '../validators/userValidator.js';
 import { validationMiddleware } from '../middlewares/validationMiddleware.js';
 
 const router = express.Router();
+
+router.get("/usuarios",
+    authMiddleware,
+    adminMiddleware,
+    getUsersController
+)
 
 router.post("/cadastro-usuario",
     authMiddleware,

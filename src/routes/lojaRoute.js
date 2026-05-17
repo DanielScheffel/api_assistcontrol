@@ -4,9 +4,17 @@ import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { lojaValidator } from '../validators/lojaValidator.js';
 import { validationMiddleware } from '../middlewares/validationMiddleware.js';
-import { deleteLojaController, lojaController, updateLojaController } from '../controllers/lojaController.js';
+import { deleteLojaController, 
+    getLojasController, 
+    lojaController, 
+    updateLojaController } from '../controllers/lojaController.js';
 
 const router = express.Router();
+
+router.get("/lojas",
+    authMiddleware,
+    getLojasController
+)
 
 router.post("/loja/nova-loja",
     authMiddleware,

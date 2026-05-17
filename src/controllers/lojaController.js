@@ -1,6 +1,20 @@
 import { lojahasUsuarioModel } from "../models/lojahasUsuarioModel.js";
-import { deleteLojaModel, lojaModel, updateLojaModel } from "../models/lojaModel.js";
+import { deleteLojaModel, 
+    getLojaModel, 
+    lojaModel, 
+    updateLojaModel } from "../models/lojaModel.js";
 
+export async function getLojasController(req, res) {
+    try {
+        const result = await getLojaModel();
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(400).json({
+            message: error.message
+        })
+    }
+}
 
 export async function lojaController(req, res) {
     try {

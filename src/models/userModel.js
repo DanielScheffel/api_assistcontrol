@@ -2,6 +2,12 @@ import 'dotenv/config';
 import pool from '../config/database.js';
 import bcrypt from 'bcrypt';
 
+export async function getUsersModel() {
+    const result = await pool.query("SELECT id_usuario, nome, email, tipo_usuario, status FROM usuario");
+
+    return result.rows;
+}
+
 export async function userModel(nome, email, senha_hash, tipo_usuario) {
 
     //Verificando se o email já existe

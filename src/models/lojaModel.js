@@ -1,6 +1,12 @@
 import 'dotenv/config';
 import pool from '../config/database.js';
 
+export async function getLojaModel() {
+    const result = await pool.query("SELECT * FROM loja");
+
+    return result.rows;
+}
+
 export async function lojaModel( loja_nome, cidade, uf, sigla, cnpj, usuarioLogado ) {
 
     // Verificando se a loja já existe
