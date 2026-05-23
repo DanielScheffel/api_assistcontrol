@@ -1,0 +1,150 @@
+CREATE TYPE tipo_usuario_enum AS ENUM ('Administrador', 'Gerente', 'Funcionario');
+CREATE TYPE status_usuario_enum AS ENUM ('Ativo', 'Inativo');
+
+-- =========================
+-- TABELA usuario
+-- =========================
+CREATE TABLE usuario (
+  id_usuario SERIAL PRIMARY KEY,
+  nome VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL UNIQUE,
+  senha_hash VARCHAR(255) NOT NULL,
+  tipo_usuario tipo_usuario_enum NOT NULL,
+  status status_usuario_enum NOT NULL
+);
+
+-- =========================
+-- categoria_produto
+-- =========================
+CREATE TABLE categoria_produto (
+  id_categoria_produto SERIAL PRIMARY KEY,
+  categoria VARCHAR(50) NOT NULL
+);
+
+-- =========================
+-- fornecedor
+-- =========================
+CREATE TABLE fornecedor (
+  id_fornecedor SERIAL PRIMARY KEY,
+  nome VARCHAR(50) NOT NULL,
+  contato VARCHAR(11) NOT NULL,
+  email VARCHAR(50) NOT NULL UNIQUE,
+  representante VARCHAR(50) NOT NULL
+);
+
+-- =========================
+-- produto
+-- =========================
+CREATE TABLE produto (
+  id_produto SERIAL PRIMARY KEY,
+  nome VARCHAR(50) NOT NULL,
+  sku VARCHAR(20) NOT NULL UNIQUE,
+  valor_produto NUMERIC(10,2) NOT NULL,
+  cor VARCHAR(45) NOT NULL,
+  categoria_produto_id_categoria_produto INT NOT NULL,
+  fornecedor_id_fornecedor INT NOT NULL,
+
+  CONSTRAINT fk_produto_categoria
+    FOREIGN KEY (categoria_produto_id_categoria_produto)
+    REFERENCES categoria_produto (id_categoria_produto),
+
+  CONSTRAINT fk_produto_fornecedor
+    FOREIGN KEY (fornecedor_id_fornecedor)
+    REFERENCES fornecedor (id_fornecedor)
+);
+
+-- =========================
+-- loja
+-- =========================
+CREATE TABLE loja (
+  id_loja SERIAL PRIMARY KEY,
+  loja_nome VARCHAR(45) NOT NULL,
+  cidade VARCHAR(45) NOT NULL,
+  uf VARCHAR(2) NOT NULL,
+  sigla VARCHAR(3) NOT NULL,
+  cnpj VARCHAR(18) NOT NULL UNIQUE
+);
+
+-- ALTER TABLE loja
+-- ALTER COLUMN cnpj TYPE VARCHAR(18);
+
+ALTER TABLE usuario_has_loja
+DROP CONSTRAINT IF EXISTS usuario_has_loja_usuario_id_usuario_fkey;
+
+ALTER TABLE usuario_has_loja
+DROP CONSTRAINT IF EXISTS usuario_has_loja_loja_id_loja_fkey;
+
+ALTER TABLE usuario_has_loja
+ADD CONSTRAINT fk_usuario
+FOREIGN KEY (usuario_id_usuario)
+REFERENCES usuario(id_usuario)
+ON DELETE CASCADE;
+
+ALTER TABLE usuario_has_loja
+ADD CONSTRAINT fk_loja
+FOREIGN KEY (loja_id_loja)
+REFERENCES loja(id_loja)
+ON DELETE CASCADE;
+
+-- =========================
+-- status_assistencia
+-- =========================
+CREATE TABLE status_assistencia (
+  id_status_assistencia SERIAL PRIMARY KEY,
+  nome VARCHAR(45) NOT NULL
+);
+
+-- =========================
+-- assistencia
+-- =========================
+CREATE TABLE assistencia (
+  id_assistencia SERIAL PRIMARY KEY,
+  defeito TEXT NOT NULL,
+  img_url TEXT NOT NULL,
+  img_nome VARCHAR(255) NOT NULL,
+  numero_peca VARCHAR(50) NOT NULL,
+  descricao_peca VARCHAR(255) NOT NULL,
+  data_solicitada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  data_finalizada TIMESTAMP NULL,
+
+  loja_id_loja INT NOT NULL,
+  usuario_id_usuario INT NOT NULL,
+  produto_id_produto INT NOT NULL,
+  status_assistencia_id_status_assistencia INT NOT NULL,
+
+  FOREIGN KEY (loja_id_loja) REFERENCES loja(id_loja),
+  FOREIGN KEY (usuario_id_usuario) REFERENCES usuario(id_usuario),
+  FOREIGN KEY (produto_id_produto) REFERENCES produto(id_produto),
+  FOREIGN KEY (status_assistencia_id_status_assistencia)
+    REFERENCES status_assistencia(id_status_assistencia)
+);
+
+-- =========================
+-- usuario_has_loja
+-- =========================
+CREATE TABLE usuario_has_loja (
+  usuario_id_usuario INT NOT NULL,
+  loja_id_loja INT NOT NULL,
+
+  PRIMARY KEY (usuario_id_usuario, loja_id_loja),
+
+  FOREIGN KEY (usuario_id_usuario) REFERENCES usuario(id_usuario),
+  FOREIGN KEY (loja_id_loja) REFERENCES loja(id_loja)
+);
+
+-- =========================
+-- historico_status
+-- =========================
+CREATE TABLE historico_status (
+  id_historico_status SERIAL PRIMARY KEY,
+  data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  assistencia_id_assistencia INT NOT NULL,
+  status_assistencia_id_status_assistencia INT NOT NULL,
+
+  FOREIGN KEY (assistencia_id_assistencia)
+    REFERENCES assistencia(id_assistencia),
+
+  FOREIGN KEY (status_assistencia_id_status_assistencia)
+    REFERENCES status_assistencia(id_status_assistencia)
+);

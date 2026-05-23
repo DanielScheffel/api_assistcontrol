@@ -12,6 +12,7 @@ import userRoute from './routes/userRoute.js';
 import supplierRoute from './routes/supplierRoute.js';
 import categoryRoute from './routes/categoryRoute.js';
 import lojaRoute from './routes/lojaRoute.js';
+import produtoRoute from './routes/produtoRoute.js';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/usuario', userRoute);
 app.use('/fornecedor', supplierRoute);
 app.use('/categoria', categoryRoute);
 app.use('/lojas', lojaRoute);
+app.use('/produtos', produtoRoute);
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
