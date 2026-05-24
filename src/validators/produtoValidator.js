@@ -15,11 +15,11 @@ export const produtoValidator = [
     body("cor")
         .notEmpty().withMessage("A cor do produto é obrigatória"),
 
-    body("id_categoria")
+    body("categoria_id")
         .notEmpty().withMessage("O ID da categoria é obrigatório")
         .isInt({ gt: 0 }).withMessage("O ID da categoria deve ser um número inteiro maior que zero"),
 
-    body("id_fornecedor")
+    body("fornecedor_id")
         .notEmpty().withMessage("O ID do fornecedor é obrigatório")
         .isInt({ gt: 0 }).withMessage("O ID do fornecedor deve ser um número inteiro maior que zero")
 ]
