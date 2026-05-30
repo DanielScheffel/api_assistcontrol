@@ -7,7 +7,7 @@ export async function getProdutosModel() {
     return result.rows;
 }
 
-export async function produtoModel(nome, sku, valor_produto, cor, categoria_id, fornecedor_id) {
+export async function produtoModel( sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id) {
 
     const result = await pool.query("SELECT * FROM produto WHERE sku = $1", [sku]);
     const rows = result.rows;
@@ -30,8 +30,8 @@ export async function produtoModel(nome, sku, valor_produto, cor, categoria_id, 
 
 
     const insertResult = await pool.query(
-        `INSERT INTO produto (nome, sku, valor_produto, cor, categoria_id, fornecedor_id) VALUES ($1, $2, $3, $4, $5, $6)`,
-        [nome, sku, valor_produto, cor, categoria_id, fornecedor_id]
+        `INSERT INTO produto (sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+        [sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id]
     )
 
     return {
@@ -39,7 +39,7 @@ export async function produtoModel(nome, sku, valor_produto, cor, categoria_id, 
     }
 }
 
-export async function updateProdutoModel({ produtoID, nome, sku, valor_produto, cor, categoria_id, fornecedor_id }) {
+export async function updateProdutoModel({ produtoID, sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id }) {
 
     const result = await pool.query("SELECT id_produto FROM produto WHERE id_produto = $1", [produtoID]);
 
@@ -48,11 +48,11 @@ export async function updateProdutoModel({ produtoID, nome, sku, valor_produto, 
     }
 
     const update = await pool.query(
-        `UPDATE produto SET nome = COALESCE($1, nome), sku = COALESCE($2, sku),
-        valor_produto = COALESCE($3, valor_produto), cor = COALESCE($4, cor),
-        categoria_id = COALESCE($5, categoria_id), fornecedor_id = COALESCE($6, fornecedor_id) WHERE id_produto = $7
-        RETURNING id_produto, nome, sku, valor_produto, cor, categoria_id, fornecedor_id`,
-        [nome, sku, valor_produto, cor, categoria_id, fornecedor_id, produtoID]
+        `UPDATE produto SET sku = COALESCE($2, sku),
+        descricao = COALESCE($3, descricao), valor_produto = COALESCE($4, valor_produto), codigo_gtin_ean = COALESCE($5, codigo_gtin_ean),
+        categoria_id = COALESCE($6, categoria_id), fornecedor_id = COALESCE($7, fornecedor_id) WHERE id_produto = $8
+        RETURNING id_produto, sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id`,
+        [sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id, produtoID]
     )
 
     return update.rows[0];

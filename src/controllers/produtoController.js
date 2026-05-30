@@ -15,9 +15,9 @@ export async function produtoController(req, res) {
 
     try {
 
-        const { nome, sku, valor_produto, cor, categoria_id, fornecedor_id } = req.body;
+        const { sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id } = req.body;
 
-        const result = await produtoModel(nome, sku, valor_produto, cor, categoria_id, fornecedor_id);
+        const result = await produtoModel(sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id);
 
         return res.status(201).json(result);
     } catch (error) {
@@ -31,14 +31,14 @@ export async function produtoController(req, res) {
 export async function updateProdutoController(req, res) {
     try {
         const { produtoID } = req.params;
-        const { nome, sku, valor_produto, cor, categoria_id, fornecedor_id } = req.body;
+        const { sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id } = req.body;
 
         const updateProduto = await updateProdutoModel({
             produtoID,
-            nome,
             sku,
+            descricao,
             valor_produto,
-            cor,
+            codigo_gtin_ean,
             categoria_id,
             fornecedor_id
         })

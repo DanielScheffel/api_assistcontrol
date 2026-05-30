@@ -18,7 +18,7 @@ export async function lojahasUsuarioModel( userID, lojaID, usuarioLogado ) {
     }
 
     await pool.query(
-        `INSERT INTO usuario_has_loja (usuario_id_usuario, loja_id_loja)
+        `INSERT INTO usuario_has_loja (usuario_id, loja_id)
         VALUES ($1, $2)`,
         [userID, lojaID]
     )
