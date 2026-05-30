@@ -18,14 +18,14 @@ export async function getSuppliersController(req, res) {
 
 export async function supplierController(req, res) {
 
-    const { nome, contato, email, representante } = req.body;
+    const { marca, representante, contato, email } = req.body;
     const usuarioLogado = req.user;
 
     const result = await supplierModel(
-        nome,
+        marca,
+        representante,
         contato,
         email,
-        representante,
         usuarioLogado
     )
 
@@ -40,15 +40,15 @@ export async function updateSupplierController(req, res) {
 
     try {
         const { supplierID } = req.params;
-        const { nome, contato, email, representante } = req.body;
+        const { marca, representante, contato, email } = req.body;
         const usuarioLogado = req.user;
 
         const updateSupplier = await updateSupplierModel({
             supplierID,
-            nome,
+            marca,
+            representante,
             contato,
             email,
-            representante,
             usuarioLogado
         })
 

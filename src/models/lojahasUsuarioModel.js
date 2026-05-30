@@ -9,7 +9,7 @@ export async function lojahasUsuarioModel( userID, lojaID, usuarioLogado ) {
 
     const result = await pool.query(
         `SELECT * FROM usuario_has_loja
-        WHERE usuario_id_usuario = $1 AND loja_id_loja = $2`,
+        WHERE usuario_id = $1 AND loja_id = $2`,
         [userID, lojaID]
     )
 

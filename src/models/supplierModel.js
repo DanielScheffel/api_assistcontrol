@@ -10,7 +10,7 @@ export async function getSupplierModel() {
 export async function supplierModel( marca, representante, contato, email, usuarioLogado ) {
 
     //Verificando se a empresa já existe
-    const result = await pool.query("SELECT * FROM fornecedor WHERE nome = $1", [marca]);
+    const result = await pool.query("SELECT * FROM fornecedor WHERE marca = $1", [marca]);
     const rows = result.rows;
 
     if(rows.length > 0) {

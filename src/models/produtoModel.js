@@ -2,7 +2,7 @@ import 'dotenv/config';
 import pool from '../config/database.js';
 
 export async function getProdutosModel() {
-    const result = await pool.query("SELECT id_produto, nome, sku, valor_produto, cor FROM produto");
+    const result = await pool.query("SELECT id_produto, sku, descricao, valor_produto, codigo_gtin_ean FROM produto");
 
     return result.rows;
 }
