@@ -1,6 +1,7 @@
 import { assistenciaModel, 
     getAssistenciaList,
-    criarHistoricoStatus
+    criarHistoricoStatus,
+    updateStatusAssistencia
  }  from "../models/assistenciaModel.js";
 import { criarImagemAssistencia } from "../models/assistenciaImagemModel.js";
 
@@ -56,4 +57,27 @@ export async function assistenciaController(req, res) {
         })
     }
 
+}
+
+export async function updateStatusAssistenciaController(req, res) {
+    try {
+        const { id } = req.params;
+        const { status_assistencia_id } = req.body;
+
+        const result = await updateStatusAssistencia(
+            id,
+            status_assistencia_id
+        );
+
+        await criarHistoricoStatus(
+            id,
+            status_assistencia_id
+        )
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(400).json({
+            error: error.message,
+        })
+    }
 }

@@ -68,3 +68,50 @@ export async function criarHistoricoStatus(assistenciaID, status_assistenciaID) 
   }
 
 }
+
+
+export async function updateStatusAssistencia(assistenciaID, status_assistenciaID) {
+
+  const assistencia = await pool.query(
+    "SELECT * FROM assistencia WHERE id_assistencia = $1",
+    [assistenciaID]
+  )
+
+  if(assistencia.rows.length === 0) {
+    throw new Error("Assistência não encontrada")
+  }
+
+  const status = await pool.query(
+    "SELECT * FROM status_assistencia WHERE id_status_assistencia = $1",
+    [status_assistenciaID]
+  )
+
+  if(status.rows.length === 0) {
+    throw new Error("Status de assistência não encontrado")
+  }
+
+  if (status_assistenciaID == 4 || status_assistenciaID == 5) {
+    await pool.query(
+      `UPDATE assistencia
+         SET
+            status_assistencia_id = $1,
+            data_finalizada = CURRENT_TIMESTAMP
+         WHERE id_assistencia = $2`,
+        [assistenciaID, status_assistenciaID]
+    )
+  } else {
+    await pool.query(
+        `UPDATE assistencia
+         SET status_assistencia_id = $1
+         WHERE id_assistencia = $2`,
+        [assistenciaID, status_assistenciaID]
+    );
+  }
+
+  const result = await pool.query(
+    `UPDATE assistencia SET status_assistencia_id = $1 WHERE id_assistencia = $2 RETURNING *`,
+    [status_assistenciaID, assistenciaID]
+  )
+
+  return result.rows[0];
+}

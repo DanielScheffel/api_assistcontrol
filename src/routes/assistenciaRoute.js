@@ -3,7 +3,7 @@ import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { assistenciaValidator } from '../validators/assistenciaValidator.js';
 import { validationMiddleware } from '../middlewares/validationMiddleware.js';
-import { assistenciaController, getAssistenciaListController } from '../controllers/assistenciaController.js';
+import { assistenciaController, getAssistenciaListController, updateStatusAssistenciaController } from '../controllers/assistenciaController.js';
 
 import { upload } from '../middlewares/uploadMiddleware.js';
 
@@ -23,6 +23,12 @@ router.post("/cadastro-assistencia",
     assistenciaValidator,
     validationMiddleware,
     assistenciaController
+)
+
+router.patch("/atualizar-status-assistencia/:id",
+    authMiddleware,
+    adminMiddleware,
+    updateStatusAssistenciaController
 )
 
 export default router;
