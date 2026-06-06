@@ -1,0 +1,28 @@
+import express from 'express';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
+import { adminMiddleware } from '../middlewares/adminMiddleware.js';
+import { assistenciaValidator } from '../validators/assistenciaValidator.js';
+import { validationMiddleware } from '../middlewares/validationMiddleware.js';
+import { assistenciaController, getAssistenciaListController } from '../controllers/assistenciaController.js';
+
+import { upload } from '../middlewares/uploadMiddleware.js';
+
+
+const router = express.Router();
+
+router.get("/lista-assistencia",
+    authMiddleware,
+    adminMiddleware,
+    getAssistenciaListController
+)
+
+router.post("/cadastro-assistencia",
+    authMiddleware,
+    adminMiddleware,
+    upload.array("imagens", 5),
+    assistenciaValidator,
+    validationMiddleware,
+    assistenciaController
+)
+
+export default router;

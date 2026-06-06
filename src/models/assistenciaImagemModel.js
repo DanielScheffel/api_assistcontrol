@@ -1,0 +1,17 @@
+import "dotenv/config";
+import pool from "../config/database.js";
+
+export async function criarImagemAssistencia( assistenciaID, file ) {
+    await pool.query(
+        `INSERT INTO assistencia_imagem (assistencia_id, nome_arquivo, url_arquivo)
+        VALUES ($1, $2, $3)`,
+        [assistenciaID, file.filename, file.path]
+    )
+
+    return {
+        message: "Imagem de assistência cadastrada com sucesso",
+        assistenciaID,
+        nome_arquivo: file.filename,
+        url_arquivo: file.path
+    }
+}

@@ -1,37 +1,54 @@
-import 'dotenv/config';
-import pool from '../config/database.js';
+import "dotenv/config";
+import pool from "../config/database.js";
 
-// export async function getAssistenciaModel() {
-//     const result = await pool.query("SELECT loja_id, ")
-// }
+export async function getAssistenciaList() {
+  const result = await pool.query("select * from assistencia");
 
-export async function assistenciaModel(defeito, img_url, img_nome, numero_peca, descricao_peca, loja_id, usuario_id, produto_id, status_assistencia_id) {
-    const loja = await pool.query("SELECT * FROM loja WHERE id_loja = $1", [loja_id]);
+  return result.rows;
+}
 
-    if(loja.rows.length === 0) {
-        throw new Error("Loja não encontrada");
-    }
+export async function assistenciaModel(
+  defeito,
+  numero_peca,
+  descricao_peca,
+  loja_id,
+  usuario_id,
+  produto_id,
+  status_assistencia_id,
+) {
+  const loja = await pool.query("SELECT * from  loja WHERE id_loja = $1", [
+    loja_id,
+  ]);
 
-    const produto = await pool.query("SELECT * FROM produto WHERE id_produto = $1", [produto_id]);
+  if (loja.rows.length === 0) {
+    throw new Error("Loja não encontrada");
+  }
 
-    if(produto.rows.length === 0) {
-        throw new Error("Produto não encontrado");
-    }
+  const produto = await pool.query(
+    "SELECT * from  produto WHERE id_produto = $1",
+    [produto_id],
+  );
 
-    const status = await pool.query("SELECT * FROM status_assistencia WHERE id_status_assistencia = $1", [status_assistencia_id]);
+  if (produto.rows.length === 0) {
+    throw new Error("Produto não encontrado");
+  }
 
-    if(status.rows.length === 0) {
-        throw new Error("Status de assistência não encontrado");
-    }
+  const result = await pool.query(
+    `INSERT INTO assistencia (defeito, numero_peca, descricao_peca, loja_id, usuario_id, produto_id, status_assistencia_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id_assistencia`,
+    [
+      defeito,
+      numero_peca,
+      descricao_peca,
+      loja_id,
+      usuario_id,
+      produto_id,
+      status_assistencia_id,
+    ],
+  );
 
-    const result = await pool.query(
-        `INSERT INTO assistencia (defeito, img_url, img_nome, numero_peca, descricao_peca, loja_id, usuario_id, produto_id, status_assistencia_id)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id_assistencia`,
-        [defeito, img_url, img_nome, numero_peca, descricao_peca, loja_id, usuario_id, produto_id, status_assistencia_id]
-    )
-
-    return {
-        message: "Assistência cadastrada com sucesso",
-        id: result.rows[0].id_assistencia
-    }
+  return {
+    message: "Assistência cadastrada com sucesso",
+    id: result.rows[0].id_assistencia,
+  };
 }
