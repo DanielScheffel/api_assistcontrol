@@ -1,4 +1,7 @@
-import { assistenciaModel, getAssistenciaList }  from "../models/assistenciaModel.js";
+import { assistenciaModel, 
+    getAssistenciaList,
+    criarHistoricoStatus
+ }  from "../models/assistenciaModel.js";
 import { criarImagemAssistencia } from "../models/assistenciaImagemModel.js";
 
 export async function getAssistenciaListController(req, res) {
@@ -27,6 +30,11 @@ export async function assistenciaController(req, res) {
             produto_id,
             status_assistencia_id
         );
+
+        await criarHistoricoStatus(
+            result.id,
+            status_assistencia_id
+        )
 
         if(req.files && req.files.length > 0) {
             for (const file of req.files) {

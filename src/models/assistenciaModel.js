@@ -52,3 +52,19 @@ export async function assistenciaModel(
     id: result.rows[0].id_assistencia,
   };
 }
+
+export async function criarHistoricoStatus(assistenciaID, status_assistenciaID) {
+
+  await pool.query(
+    `INSERT INTO historico_status (assistencia_id, status_assistencia_id)
+    VALUES ($1, $2)`,
+    [assistenciaID, status_assistenciaID]
+  )
+
+  return {
+    message: "Histórico de assistência criado com sucesso",
+    assistenciaID,
+    status_assistenciaID
+  }
+
+}
