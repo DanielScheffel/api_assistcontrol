@@ -3,7 +3,11 @@ import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { assistenciaValidator } from '../validators/assistenciaValidator.js';
 import { validationMiddleware } from '../middlewares/validationMiddleware.js';
-import { assistenciaController, getAssistenciaListController, updateStatusAssistenciaController } from '../controllers/assistenciaController.js';
+import { assistenciaController, 
+    getAssistenciaListController, 
+    updateStatusAssistenciaController,
+    getAssistenciaByIdController
+ } from '../controllers/assistenciaController.js';
 
 import { upload } from '../middlewares/uploadMiddleware.js';
 
@@ -14,6 +18,12 @@ router.get("/lista-assistencia",
     authMiddleware,
     adminMiddleware,
     getAssistenciaListController
+)
+
+router.get("/:id",
+    authMiddleware,
+    adminMiddleware,
+    getAssistenciaByIdController
 )
 
 router.post("/cadastro-assistencia",

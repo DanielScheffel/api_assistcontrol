@@ -3,6 +3,8 @@ import pool from '../config/database.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
+// Função para realizar login do usuário
 export async function loginModel(email, senha) {
 
     //Bucando por usuário no banco

@@ -1,10 +1,12 @@
 import { assistenciaModel, 
     getAssistenciaList,
     criarHistoricoStatus,
-    updateStatusAssistencia
+    updateStatusAssistencia,
+    getAssistenciaById
  }  from "../models/assistenciaModel.js";
 import { criarImagemAssistencia } from "../models/assistenciaImagemModel.js";
 
+// Controller para obter a lista de assistências
 export async function getAssistenciaListController(req, res) {
     try {
         const assistenciaList = await getAssistenciaList();
@@ -16,6 +18,7 @@ export async function getAssistenciaListController(req, res) {
     }
 }
 
+// Controller para criar uma nova assistência
 export async function assistenciaController(req, res) {
     try {
         const { defeito, numero_peca, descricao_peca, loja_id, produto_id, status_assistencia_id } = req.body;
@@ -59,6 +62,7 @@ export async function assistenciaController(req, res) {
 
 }
 
+// Controller para atualizar o status de uma assistência
 export async function updateStatusAssistenciaController(req, res) {
     try {
         const { id } = req.params;
@@ -75,6 +79,31 @@ export async function updateStatusAssistenciaController(req, res) {
         )
 
         return res.status(200).json(result);
+    } catch (error) {
+        return res.status(400).json({
+            error: error.message,
+        })
+    }
+}
+
+
+// Controller para obter uma assistência por ID
+export async function getAssistenciaByIdController(req, res) {
+    try {
+
+        const { id} = req.params;
+        const result = await getAssistenciaById(id);
+
+        if(!result) {
+            return res.status(404).json({
+                error: "Assistência não encontrada"
+            })
+        }
+
+        return res.status(200).json({
+            assistencia: result
+        })
+
     } catch (error) {
         return res.status(400).json({
             error: error.message,

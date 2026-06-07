@@ -1,6 +1,7 @@
 import "dotenv/config";
 import pool from "../config/database.js";
 
+// Cria uma nova imagem de assistência
 export async function criarImagemAssistencia( assistenciaID, file ) {
     await pool.query(
         `INSERT INTO assistencia_imagem (assistencia_id, nome_arquivo, url_arquivo)
