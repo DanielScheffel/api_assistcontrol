@@ -5,6 +5,7 @@ import { assistenciaModel,
     getAssistenciaById
  }  from "../models/assistenciaModel.js";
 import { criarImagemAssistencia } from "../models/assistenciaImagemModel.js";
+import { sendEmailAssistencia } from "../services/serviceEmailAssistencia.js";
 
 // Controller para obter a lista de assistências
 export async function getAssistenciaListController(req, res) {
@@ -34,12 +35,7 @@ export async function assistenciaController(req, res) {
             produto_id,
             status_assistencia_id
         );
-
-        await criarHistoricoStatus(
-            result.id,
-            status_assistencia_id
-        )
-
+        
         if(req.files && req.files.length > 0) {
             for (const file of req.files) {
                 await criarImagemAssistencia(
@@ -47,6 +43,17 @@ export async function assistenciaController(req, res) {
                     file
                 )
             }
+        }
+        
+        await criarHistoricoStatus(
+            result.id,
+            status_assistencia_id
+        )
+        
+        try {
+            await sendEmailAssistencia(result.id);
+        } catch (emailError) {
+            console.error("Erro ao enviar email de assistência:", emailError);
         }
 
         // console.log("BODY: ", req.body);

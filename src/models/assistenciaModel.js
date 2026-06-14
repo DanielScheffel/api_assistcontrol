@@ -143,6 +143,7 @@ export async function getAssistenciaById(assistenciaID) {
   const result = await pool.query(
     `SELECT
             a.id_assistencia,
+            a.codigo_interno,
             a.defeito,
             a.numero_peca,
             a.descricao_peca,

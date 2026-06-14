@@ -15,6 +15,7 @@ import lojaRoute from './routes/lojaRoute.js';
 import produtoRoute from './routes/produtoRoute.js';
 import assistenciaRoute from './routes/assistenciaRoute.js';
 
+
 const app = express();
 
 app.use(express.json());
@@ -31,6 +32,7 @@ app.use('/categoria', categoryRoute);
 app.use('/lojas', lojaRoute);
 app.use('/produtos', produtoRoute);
 app.use('/assistencia', assistenciaRoute);
+
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
