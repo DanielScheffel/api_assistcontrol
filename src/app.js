@@ -14,7 +14,7 @@ import categoryRoute from './routes/categoryRoute.js';
 import lojaRoute from './routes/lojaRoute.js';
 import produtoRoute from './routes/produtoRoute.js';
 import assistenciaRoute from './routes/assistenciaRoute.js';
-
+import metricasRoute from './routes/metricasRoute.js';
 
 const app = express();
 
@@ -32,6 +32,7 @@ app.use('/categoria', categoryRoute);
 app.use('/lojas', lojaRoute);
 app.use('/produtos', produtoRoute);
 app.use('/assistencia', assistenciaRoute);
+app.use('/metricas', metricasRoute);
 
 
 if(process.env.NODE_ENV === 'development') {
