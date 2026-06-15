@@ -79,7 +79,9 @@ export async function updateStatusAssistenciaController(req, res) {
 
     await criarHistoricoStatus(id, status_assistencia_id);
 
-    return res.status(200).json(result);
+    return res.status(200).json({
+        message: "Status atualizado com sucesso!"
+    });
   } catch (error) {
     return res.status(400).json({
       error: error.message,

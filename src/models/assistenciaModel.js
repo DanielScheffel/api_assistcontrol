@@ -113,28 +113,28 @@ export async function updateStatusAssistencia(
     throw new Error("Status de assistência não encontrado");
   }
 
+  let result;
+
   if (status_assistenciaID == 4 || status_assistenciaID == 5) {
-    await pool.query(
+
+    result = await pool.query(
       `UPDATE assistencia
          SET
             status_assistencia_id = $1,
             data_finalizada = CURRENT_TIMESTAMP
          WHERE id_assistencia = $2`,
-      [assistenciaID, status_assistenciaID],
+      [status_assistenciaID, assistenciaID],
     );
+
   } else {
-    await pool.query(
+
+    result = await pool.query(
       `UPDATE assistencia
          SET status_assistencia_id = $1
          WHERE id_assistencia = $2`,
-      [assistenciaID, status_assistenciaID],
+      [status_assistenciaID, assistenciaID],
     );
   }
-
-  const result = await pool.query(
-    `UPDATE assistencia SET status_assistencia_id = $1 WHERE id_assistencia = $2 RETURNING *`,
-    [status_assistenciaID, assistenciaID],
-  );
 
   return result.rows[0];
 }
