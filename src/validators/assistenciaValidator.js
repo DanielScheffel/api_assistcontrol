@@ -20,8 +20,4 @@ export const assistenciaValidator = [
     body("produto_id")
         .notEmpty().withMessage("O campo produto_id é obrigatório")
         .isInt().withMessage("O campo produto_id deve ser um número inteiro"),
-
-    body("status_assistencia_id")
-        .notEmpty().withMessage("O campo status_assistencia_id é obrigatório")
-        .isInt().withMessage("O campo status_assistencia_id deve ser um número inteiro"),
 ]

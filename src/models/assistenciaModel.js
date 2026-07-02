@@ -3,7 +3,36 @@ import pool from "../config/database.js";
 
 // Função para obter a lista de assistências
 export async function getAssistenciaList() {
-  const result = await pool.query("select * from assistencia");
+  const result = await pool.query(`
+    SELECT
+  a.id_assistencia,
+  a.codigo_interno,
+  a.defeito,
+  a.numero_peca,
+  a.descricao_peca,
+  a.data_solicitada,
+  a.data_finalizada,
+
+  l.loja_nome,
+
+  p.sku,
+  p.descricao AS produto,
+
+  s.status
+
+FROM assistencia a
+
+INNER JOIN loja l
+  ON a.loja_id = l.id_loja
+
+INNER JOIN produto p
+  ON a.produto_id = p.id_produto
+
+INNER JOIN status_assistencia s
+  ON a.status_assistencia_id = s.id_status_assistencia
+
+ORDER BY a.data_solicitada DESC;
+  `);
 
   return result.rows;
 }
@@ -16,8 +45,9 @@ export async function assistenciaModel(
   loja_id,
   usuario_id,
   produto_id,
-  status_assistencia_id,
 ) {
+
+  const statusInicial = 1;
   const loja = await pool.query("SELECT * from  loja WHERE id_loja = $1", [
     loja_id,
   ]);
@@ -45,7 +75,7 @@ export async function assistenciaModel(
       loja_id,
       usuario_id,
       produto_id,
-      status_assistencia_id,
+      statusInicial
     ],
   );
 

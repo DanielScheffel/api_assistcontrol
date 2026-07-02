@@ -30,7 +30,6 @@ export async function assistenciaController(req, res) {
       descricao_peca,
       loja_id,
       produto_id,
-      status_assistencia_id,
     } = req.body;
     const usuarioLogado = req.user;
 
@@ -41,7 +40,6 @@ export async function assistenciaController(req, res) {
       loja_id,
       usuarioLogado.id_usuario,
       produto_id,
-      status_assistencia_id,
     );
 
     if (req.files && req.files.length > 0) {
@@ -50,7 +48,7 @@ export async function assistenciaController(req, res) {
       }
     }
 
-    await criarHistoricoStatus(result.id, status_assistencia_id);
+    await criarHistoricoStatus(result.id, 1);
 
     try {
       await sendEmailAssistencia(result.id);
@@ -75,14 +73,22 @@ export async function updateStatusAssistenciaController(req, res) {
     const { id } = req.params;
     const { status_assistencia_id } = req.body;
 
+    // console.log("PARAM ID:", id);
+    // console.log("STATUS BODY:", status_assistencia_id);
+
     const result = await updateStatusAssistencia(id, status_assistencia_id);
+
+    // console.log("RESULT UPDATE:", result);
 
     await criarHistoricoStatus(id, status_assistencia_id);
 
     return res.status(200).json({
-        message: "Status atualizado com sucesso!"
+      message: "Status atualizado com sucesso!",
+      assistencia: result
     });
   } catch (error) {
+    // console.error("ERRO UPDATE STATUS:", error);
+
     return res.status(400).json({
       error: error.message,
     });

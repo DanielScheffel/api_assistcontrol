@@ -7,6 +7,28 @@ export async function getSupplierModel() {
     return result.rows;
 }
 
+export async function getSupplierById(id) {
+    const result = await pool.query(
+        `
+        SELECT
+            id_fornecedor,
+            marca,
+            representante,
+            contato,
+            email
+        FROM fornecedor
+        WHERE id_fornecedor = $1
+        `,
+        [id]
+    );
+
+    if (result.rows.length === 0) {
+        throw new Error("Fornecedor não encontrado");
+    }
+
+    return result.rows[0];
+}
+
 export async function supplierModel( marca, representante, contato, email, usuarioLogado ) {
 
     //Verificando se a empresa já existe

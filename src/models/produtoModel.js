@@ -2,7 +2,31 @@ import 'dotenv/config';
 import pool from '../config/database.js';
 
 export async function getProdutosModel() {
-    const result = await pool.query("SELECT id_produto, sku, descricao, valor_produto, codigo_gtin_ean FROM produto");
+    const result = await pool.query(`
+        SELECT
+            p.id_produto,
+            p.sku,
+            p.descricao,
+            p.valor_produto,
+            p.codigo_gtin_ean,
+
+            c.id_categoria_produto,
+            c.categoria,
+
+            f.id_fornecedor,
+            f.marca,
+            f.representante
+
+        FROM produto p
+
+        INNER JOIN categoria_produto c
+            ON p.categoria_id = c.id_categoria_produto
+
+        INNER JOIN fornecedor f
+            ON p.fornecedor_id = f.id_fornecedor
+
+        ORDER BY p.descricao;
+    `);
 
     return result.rows;
 }
@@ -61,15 +85,26 @@ export async function updateProdutoModel({ produtoID, sku, descricao, valor_prod
 
 export async function deleteProdutoModel(produtoID) {
 
-    const result = await pool.query("SELECT id_produto FROM produto WHERE id_produto = $1", [produtoID]);
+const assistencias = await pool.query(
+    `SELECT id_assistencia 
+     FROM assistencia 
+     WHERE produto_id = $1`,
+    [produtoID]
+  );
 
-    if(result.rows.length === 0) {
-        throw new Error("Produto não encontrado");
-    }
+  if (assistencias.rows.length > 0) {
+    throw new Error(
+      "Não é possível excluir este produto, pois ele possui assistências cadastradas."
+    );
+  }
 
-    await pool.query("DELETE FROM produto WHERE id_produto = $1", [produtoID]);
+  await pool.query(
+    `DELETE FROM produto 
+     WHERE id_produto = $1`,
+    [produtoID]
+  );
 
-    return {
-        message: "Produto deletado com sucesso"
-    }
+  return {
+    message: "Produto deletado com sucesso"
+  };
 }

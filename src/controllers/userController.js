@@ -1,4 +1,5 @@
 import { deleteUserModel, 
+    getUserById, 
     getUsersModel, 
     updateStatusUserModel, 
     updateUserModel, 
@@ -13,6 +14,20 @@ export async function getUsersController(req, res) {
     } catch (error) {
         return res.status(400).json({
             message: error.message
+        })
+    }
+}
+
+export async function getUserByIdController(req, res) {
+    try {
+        const {id} = req.params;
+
+        const usuario = await getUserById(id);
+
+        return res.status(200).json(usuario)
+    } catch (error) {
+        return res.status(404).json({
+            error: error.message
         })
     }
 }

@@ -1,5 +1,6 @@
 import express from 'express';
 import { deleteUserController, 
+    getUserByIdController, 
     getUsersController, 
     updateStatusUserController, 
     updateUserController, 
@@ -15,6 +16,11 @@ router.get("/usuarios",
     authMiddleware,
     adminMiddleware,
     getUsersController
+)
+
+router.get("/:id",
+    authMiddleware,
+    getUserByIdController
 )
 
 router.post("/cadastro-usuario",

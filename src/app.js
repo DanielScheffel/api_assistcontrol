@@ -16,14 +16,29 @@ import produtoRoute from './routes/produtoRoute.js';
 import assistenciaRoute from './routes/assistenciaRoute.js';
 import metricasRoute from './routes/metricasRoute.js';
 
+import etiquetaRoute from './routes/etiquetaRoute.js';
+
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(helmet());
 
-app.use('/uploads', express.static('uploads'));
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
+
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+  },
+  express.static("uploads")
+);
 
 app.use('/', authRoute);
 app.use('/usuario', userRoute);
@@ -34,6 +49,7 @@ app.use('/produtos', produtoRoute);
 app.use('/assistencia', assistenciaRoute);
 app.use('/metricas', metricasRoute);
 
+app.use('/', etiquetaRoute);
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));

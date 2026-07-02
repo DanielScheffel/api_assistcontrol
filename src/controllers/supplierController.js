@@ -1,4 +1,5 @@
 import { deleteSupplierModel, 
+    getSupplierById, 
     getSupplierModel, 
     supplierModel, 
     updateSupplierModel } from "../models/supplierModel.js";
@@ -12,6 +13,20 @@ export async function getSuppliersController(req, res) {
     } catch (error) {
         return res.status(400).json({
             message: error.message
+        })
+    }
+}
+
+export async function getSupplierByIdController(req, res) {
+    try {
+        const {id} = req.params;
+
+        const fornecedor = await getSupplierById(id);
+
+        return res.status(200).json(fornecedor)
+    } catch (error) {
+        return res.status(404).json({
+            error: error.message
         })
     }
 }

@@ -8,6 +8,28 @@ export async function getUsersModel() {
     return result.rows;
 }
 
+export async function getUserById(id) {
+    const result = await pool.query(
+        `
+        SELECT
+            id_usuario,
+            nome,
+            email,
+            tipo_usuario,
+            status
+        FROM usuario
+        WHERE id_usuario = $1
+        `,
+        [id]
+    );
+
+    if (result.rows.length === 0) {
+        throw new Error("Usuário não encontrado");
+    }
+
+    return result.rows[0];
+}
+
 export async function userModel(nome, email, senha_hash, tipo_usuario) {
 
     //Verificando se o email já existe
@@ -27,14 +49,14 @@ export async function userModel(nome, email, senha_hash, tipo_usuario) {
     
 
     //Inserindo o usuário no banco de dados
-    await pool.query(
+    const insertResult = await pool.query(
         `INSERT INTO usuario (nome, email, senha_hash, tipo_usuario, status) VALUES ($1, $2, $3, $4, $5) RETURNING id_usuario`,
         [nome, email, hashPass, tipo_usuario, "Ativo"]
     )
 
     return {
         message: "Usuário cadastrado com sucesso",
-        id: result.rows[0].id_usuario
+        id: insertResult.rows[0].id_usuario
     }
 }
 
