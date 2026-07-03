@@ -73,7 +73,7 @@ CREATE TABLE loja (
 -- =========================
 CREATE TABLE status_assistencia (
   id_status_assistencia SERIAL PRIMARY KEY,
-  nome VARCHAR(45) NOT NULL
+  status VARCHAR(45) NOT NULL
 );
 
 -- =========================
