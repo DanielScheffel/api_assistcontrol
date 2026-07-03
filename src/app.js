@@ -17,6 +17,7 @@ import assistenciaRoute from './routes/assistenciaRoute.js';
 import metricasRoute from './routes/metricasRoute.js';
 
 import etiquetaRoute from './routes/etiquetaRoute.js';
+import relatorioRoute from './routes/relatorioRoute.js';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/assistencia', assistenciaRoute);
 app.use('/metricas', metricasRoute);
 
 app.use('/', etiquetaRoute);
+app.use('/relatorio', relatorioRoute);
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));

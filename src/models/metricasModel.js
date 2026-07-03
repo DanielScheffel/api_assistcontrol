@@ -134,3 +134,45 @@ export async function getValorTotalParado() {
         valor_total: Number(result.rows[0].valor_total)
     };
 }
+
+// Métrica para assistências atrasadas
+export async function getAssistenciasAtrasadas() {
+  const result = await pool.query(`
+    SELECT
+      a.id_assistencia,
+      a.codigo_interno,
+      a.defeito,
+      a.data_solicitada,
+      l.loja_nome,
+      p.descricao AS produto,
+      f.marca AS fornecedor,
+      s.status
+    FROM assistencia a
+    INNER JOIN loja l ON a.loja_id = l.id_loja
+    INNER JOIN produto p ON a.produto_id = p.id_produto
+    INNER JOIN fornecedor f ON p.fornecedor_id = f.id_fornecedor
+    INNER JOIN status_assistencia s ON a.status_assistencia_id = s.id_status_assistencia
+    WHERE a.data_finalizada IS NULL
+      AND a.data_solicitada < CURRENT_DATE - INTERVAL '15 days'
+      AND s.status NOT IN ('Finalizada', 'Cancelada')
+    ORDER BY a.data_solicitada ASC
+  `);
+
+  return result.rows;
+}
+
+export async function getAssistenciasPorMes() {
+  const result = await pool.query(`
+    SELECT
+      TO_CHAR(data_solicitada, 'MM/YYYY') AS mes,
+      COUNT(*) AS total
+    FROM assistencia
+    GROUP BY mes
+    ORDER BY MIN(data_solicitada)
+  `);
+
+  return result.rows.map(item => ({
+    mes: item.mes,
+    total: Number(item.total)
+  }));
+}

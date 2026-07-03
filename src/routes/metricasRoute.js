@@ -6,7 +6,9 @@ import { getTotalAssistenciaController,
     getAssistenciasPorLojaController,
     getAssistenciasPorFornecedorController,
     getTempoMedioResolucaoController,
-    getValorTotalParadoController
+    getValorTotalParadoController,
+    getAssistenciasAtrasadasController,
+    getAssistenciasPorMesController
 } from "../controllers/metricasController.js";
 
 const router = express.Router();
@@ -45,6 +47,18 @@ router.get('/valor-parado',
     authMiddleware,
     adminMiddleware,
     getValorTotalParadoController
+)
+
+router.get('/atrasadas',
+    authMiddleware,
+    adminMiddleware,
+    getAssistenciasAtrasadasController
+)
+
+router.get('/mensal',
+    authMiddleware,
+    adminMiddleware,
+    getAssistenciasPorMesController
 )
 
 export default router;
