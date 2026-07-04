@@ -1,7 +1,7 @@
-import PDFDocument from "pdfkit";
-import path from "path";
-import { fileURLToPath } from "url";
 import { getRelatorioAssistencias } from "../models/relatorioModel.js";
+import PDFDocument from "pdfkit";
+import { fileURLToPath } from "url";
+import path from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,7 +10,7 @@ export async function baixarRelatorioAssistenciasPDF(req, res) {
   try {
     const assistencias = await getRelatorioAssistencias(req.query);
 
-    const doc = new PDFDocument({ margin: 40, size: "A4" });
+    const doc = new PDFDocument({ margin: 40, size: "A4", });
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
@@ -87,7 +87,23 @@ export async function baixarRelatorioAssistenciasPDF(req, res) {
         { align: "center" }
       );
 
+
     doc.end();
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function getRelatorioAssistenciasController(req, res) {
+  try {
+    const relatorio = await getRelatorioAssistencias(req.query);
+
+    return res.status(200).json({
+      total: relatorio.length,
+      assistencias: relatorio,
+    });
   } catch (error) {
     return res.status(500).json({
       error: error.message,
