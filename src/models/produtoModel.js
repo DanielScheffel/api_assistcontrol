@@ -72,9 +72,9 @@ export async function updateProdutoModel({ produtoID, sku, descricao, valor_prod
     }
 
     const update = await pool.query(
-        `UPDATE produto SET sku = COALESCE($2, sku),
-        descricao = COALESCE($3, descricao), valor_produto = COALESCE($4, valor_produto), codigo_gtin_ean = COALESCE($5, codigo_gtin_ean),
-        categoria_id = COALESCE($6, categoria_id), fornecedor_id = COALESCE($7, fornecedor_id) WHERE id_produto = $8
+        `UPDATE produto SET sku = COALESCE($1, sku),
+        descricao = COALESCE($2, descricao), valor_produto = COALESCE($3, valor_produto), codigo_gtin_ean = COALESCE($4, codigo_gtin_ean),
+        categoria_id = COALESCE($5, categoria_id), fornecedor_id = COALESCE($6, fornecedor_id) WHERE id_produto = $7
         RETURNING id_produto, sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id`,
         [sku, descricao, valor_produto, codigo_gtin_ean, categoria_id, fornecedor_id, produtoID]
     )
