@@ -2,6 +2,10 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 import express from 'express';
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 import './config/database.js';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -39,14 +43,18 @@ app.use(
   })
 );
 
-app.use(
-  "/uploads",
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const uploadsPath = path.resolve(__dirname, '../uploads');
+
+app.use("/uploads",
   (req, res, next) => {
     res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     next();
   },
-  express.static("uploads")
-);
+  express.static(uploadsPath)
+)
 
 app.use('/', authRoute);
 app.use('/usuario', userRoute);
