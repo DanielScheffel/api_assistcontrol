@@ -8,7 +8,10 @@ import { getTotalAssistenciaController,
     getTempoMedioResolucaoController,
     getValorTotalParadoController,
     getAssistenciasAtrasadasController,
-    getAssistenciasPorMesController
+    getAssistenciasPorMesController,
+    getValorPorFornecedorController,
+    getProdutosComMaisAssistenciasController,
+    getTaxaConclusaoController
 } from "../controllers/metricasController.js";
 
 const router = express.Router();
@@ -59,6 +62,24 @@ router.get('/mensal',
     authMiddleware,
     adminMiddleware,
     getAssistenciasPorMesController
+)
+
+router.get('/valor-parado-fornecedor',
+    authMiddleware,
+    adminMiddleware,
+    getValorPorFornecedorController
+)
+
+router.get('/produtos-mais-assistencias',
+    authMiddleware,
+    adminMiddleware,
+    getProdutosComMaisAssistenciasController
+)
+
+router.get('/taxa-conclusao',
+    authMiddleware,
+    adminMiddleware,
+    getTaxaConclusaoController
 )
 
 export default router;

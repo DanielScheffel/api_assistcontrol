@@ -5,7 +5,10 @@ import { getTotalAssistencias,
     getTempoMedioResolucao,
     getValorTotalParado,
     getAssistenciasAtrasadas,
-    getAssistenciasPorMes
+    getAssistenciasPorMes,
+    getValorPorFornecedor,
+    getProdutosComMaisAssistencias,
+    getTaxaConclusao
 } from "../models/metricasModel.js";
 
 export async function getTotalAssistenciaController(req, res) {
@@ -118,6 +121,42 @@ export async function getAssistenciasAtrasadasController(req, res) {
 export async function getAssistenciasPorMesController(req, res) {
   try {
     const result = await getAssistenciasPorMes();
+
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message
+    });
+  }
+}
+
+export async function getValorPorFornecedorController(req, res) {
+  try {
+    const result = await getValorPorFornecedor();
+
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message
+    });
+  }
+}
+
+export async function getProdutosComMaisAssistenciasController(req, res) {
+  try {
+    const result = await getProdutosComMaisAssistencias();
+
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message
+    });
+  }
+}
+
+export async function getTaxaConclusaoController(req, res) {
+  try {
+    const result = await getTaxaConclusao();
 
     return res.status(200).json(result);
   } catch (error) {

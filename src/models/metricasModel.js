@@ -176,3 +176,76 @@ export async function getAssistenciasPorMes() {
     total: Number(item.total)
   }));
 }
+
+export async function getValorPorFornecedor() {
+    const result = await pool.query(`
+    SELECT
+      f.marca,
+      COALESCE(ROUND(SUM(p.valor_produto), 2), 0) AS valor_total
+    FROM assistencia a
+    INNER JOIN produto p
+      ON a.produto_id = p.id_produto
+    INNER JOIN fornecedor f
+      ON p.fornecedor_id = f.id_fornecedor
+    INNER JOIN status_assistencia s
+      ON a.status_assistencia_id = s.id_status_assistencia
+    WHERE s.status NOT IN ('Concluída', 'Cancelada')
+    GROUP BY f.marca
+    ORDER BY valor_total DESC
+  `);
+
+  return result.rows.map(item => ({
+    marca: item.marca,
+    valor_total: Number(item.valor_total)
+  }));
+}
+
+export async function getProdutosComMaisAssistencias() {
+  const result = await pool.query(`
+    SELECT
+      p.descricao AS produto,
+      COUNT(*) AS total
+    FROM assistencia a
+
+    INNER JOIN produto p
+      ON a.produto_id = p.id_produto
+
+    GROUP BY p.descricao
+
+    ORDER BY total DESC
+
+    LIMIT 5
+  `);
+
+  return result.rows.map(item => ({
+    produto: item.produto,
+    total: Number(item.total)
+  }));
+}
+
+export async function getTaxaConclusao() {
+  const result = await pool.query(`
+    SELECT
+      COUNT(*) AS total,
+      COUNT(*) FILTER (
+        WHERE s.status = 'Finalizada'
+      ) AS finalizadas
+
+    FROM assistencia a
+
+    INNER JOIN status_assistencia s
+      ON a.status_assistencia_id = s.id_status_assistencia
+  `);
+
+  const total = Number(result.rows[0].total);
+  const finalizadas = Number(result.rows[0].finalizadas);
+
+  const percentual =
+    total === 0 ? 0 : Number(((finalizadas / total) * 100).toFixed(2));
+
+  return {
+    total,
+    finalizadas,
+    percentual
+  };
+}
