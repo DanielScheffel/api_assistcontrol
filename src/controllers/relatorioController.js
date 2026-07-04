@@ -20,7 +20,7 @@ export async function baixarRelatorioAssistenciasPDF(req, res) {
 
     doc.pipe(res);
 
-    const logoPath = path.join(__dirname, "../assets/logo.png");
+    const logoPath = path.join(__dirname, "../assets/logo-white.png");
 
     // Cabeçalho azul
     doc.rect(0, 0, doc.page.width, 105).fill("#2563eb");
