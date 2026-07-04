@@ -1,7 +1,7 @@
-import { getRelatorioAssistencias } from "../models/relatorioModel.js";
 import PDFDocument from "pdfkit";
-import { fileURLToPath } from "url";
 import path from "path";
+import { fileURLToPath } from "url";
+import { getRelatorioAssistencias } from "../models/relatorioModel.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,7 +10,7 @@ export async function baixarRelatorioAssistenciasPDF(req, res) {
   try {
     const assistencias = await getRelatorioAssistencias(req.query);
 
-    const doc = new PDFDocument({ margin: 40, size: "A4", });
+    const doc = new PDFDocument({ margin: 40, size: "A4" });
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
@@ -22,81 +22,72 @@ export async function baixarRelatorioAssistenciasPDF(req, res) {
 
     const logoPath = path.join(__dirname, "../assets/logo.png");
 
-    // cabeçalho do PDF
-    doc.image(logoPath, 40, 30, { width: 150 });
+    // Cabeçalho azul
+    doc.rect(0, 0, doc.page.width, 105).fill("#2563eb");
 
-    doc.fontSize(18).text("Relatório de Assistências", 40, 110);
+    doc.image(logoPath, 40, 25, { width: 145 });
+
+    doc
+      .fillColor("#ffffff")
+      .fontSize(20)
+      .text("Relatório de Assistências", 220, 30);
 
     doc
       .fontSize(10)
-      .fillColor("#555")
-      .text(`Data: ${new Date().toLocaleDateString("pt-BR")}`, 40, 135)
-      .text(`Total de Assistências: ${assistencias.length}`, 40, 150);
+      .text(`Data de emissão: ${new Date().toLocaleString("pt-BR")}`, 220, 60)
+      .text(`Total de assistências: ${assistencias.length}`, 220, 75);
 
-      doc
-        .moveTo(40, 175)
-        .lineTo(555, 175)
-        .strokeColor("#cccccc")
-        .stroke();
+    doc.y = 130;
 
-      doc.moveDown(2);
-      doc.fillColor("#000")
-
-
-      // Conteúdo do PDF
-      assistencias.forEach((a, index) => {
-      if (doc.y > 720) {
+    // Cards
+    assistencias.forEach((a) => {
+      if (doc.y > 680) {
         doc.addPage();
+        doc.y = 50;
       }
 
-      doc
-        .fillColor("#1f4ed8")
-        .fontSize(14)
-        .text(`Assistência ${a.codigo_interno}`);
-
-      doc.fillColor("#000").fontSize(10);
-
-      doc.text(`Loja: ${a.loja_nome}`);
-      doc.text(`Produto: ${a.produto_descricao}`);
-      doc.text(`Fornecedor: ${a.fornecedor}`);
-      doc.text(`Status: ${a.status}`);
-      doc.text(`Defeito: ${a.defeito}`);
-
-      doc.moveDown();
+      const cardX = 40;
+      const cardY = doc.y;
+      const cardWidth = 515;
+      const cardHeight = 118;
 
       doc
-        .moveTo(40, doc.y)
-        .lineTo(555, doc.y)
-        .strokeColor("#eeeeee")
+        .roundedRect(cardX, cardY, cardWidth, cardHeight, 8)
+        .strokeColor("#d1d5db")
+        .lineWidth(1)
         .stroke();
 
-      doc.moveDown();
+      doc
+        .fillColor("#1d4ed8")
+        .fontSize(14)
+        .text(`Assistência ${a.codigo_interno}`, cardX + 15, cardY + 12);
+
+      doc
+        .fillColor("#111827")
+        .fontSize(10)
+        .text(`Loja: ${a.loja_nome}`, cardX + 15, cardY + 38)
+        .text(`Produto: ${a.produto_descricao}`, cardX + 15, cardY + 53)
+        .text(`Fornecedor: ${a.fornecedor}`, cardX + 15, cardY + 68)
+        .text(`Status: ${a.status}`, cardX + 15, cardY + 83)
+        .text(`Defeito: ${a.defeito}`, cardX + 15, cardY + 98, {
+          width: cardWidth - 30,
+        });
+
+      doc.y = cardY + cardHeight + 15;
     });
 
-    // Rodapé do PDF
+    // Rodapé
     doc
       .fontSize(9)
-      .fillColor("#777")
-      .text("AssistControl - Relatório gerado automaticamente", 40, 780, {
-        align: "center",
-      })
+      .fillColor("#6b7280")
+      .text(
+        "AssistControl - Relatório gerado automaticamente",
+        40,
+        780,
+        { align: "center" }
+      );
 
     doc.end();
-  } catch (error) {
-    res.status(500).json({
-      error: error.message,
-    });
-  }
-}
-
-export async function getRelatorioAssistenciasController(req, res) {
-  try {
-    const relatorio = await getRelatorioAssistencias(req.query);
-
-    return res.status(200).json({
-      total: relatorio.length,
-      assistencias: relatorio,
-    });
   } catch (error) {
     return res.status(500).json({
       error: error.message,
