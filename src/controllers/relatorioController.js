@@ -35,9 +35,36 @@ export async function baixarRelatorioAssistenciasPDF(req, res) {
     doc
       .fontSize(10)
       .text(`Data de emissão: ${new Date().toLocaleString("pt-BR")}`, 220, 60)
+      .text(`Gerado por: ${req.user.nome}`, 220, 90)
       .text(`Total de assistências: ${assistencias.length}`, 220, 75);
 
+
     doc.y = 130;
+
+    const resumoX = 40;
+    const resumoY = doc.y;
+    const resumoWidth = 515;
+    const resumoHeight = 70;
+
+    doc
+      .roundedRect(resumoX, resumoY, resumoWidth, resumoHeight, 6)
+      .fillAndStroke("#f8fafc", "#d1d5db");
+
+    doc
+      .fillColor("#2563eb")
+      .font("Helvetica-Bold")
+      .fontSize(12)
+      .text("RESUMO DO RELATÓRIO", resumoX + 15, resumoY + 12);
+
+    doc
+      .fillColor("#111827")
+      .font("Helvetica")
+      .fontSize(10)
+      .text(`Data de emissão: ${new Date().toLocaleString("pt-BR")}`, resumoX + 15, resumoY + 32)
+      .text(`Gerado por: ${req.user.nome}`, resumoX + 250, resumoY + 32)
+      .text(`Total de registros: ${assistencias.length}`, resumoX + 15, resumoY + 50);
+
+    doc.y = resumoY + resumoHeight + 20;
 
     // Cards
     assistencias.forEach((a) => {
@@ -50,17 +77,30 @@ export async function baixarRelatorioAssistenciasPDF(req, res) {
       const cardY = doc.y;
       const cardWidth = 515;
       const cardHeight = 118;
+      const statusColor = {
+        "Aberto": "#dc2626",
+        "Em análise": "#f59e0b",
+        "Aguardando peça": "#2563eb",
+        "Finalizada": "#16a34a",
+        "Cancelada": "#6b7280"
+      };
 
       doc
         .roundedRect(cardX, cardY, cardWidth, cardHeight, 8)
         .strokeColor("#d1d5db")
         .lineWidth(1)
         .stroke();
+        
+      doc
+        .roundedRect(cardX, cardY, cardWidth, 8, 8)
+        .fill("#2563eb")
 
+      
       doc
         .fillColor("#1d4ed8")
         .fontSize(14)
         .text(`Assistência ${a.codigo_interno}`, cardX + 15, cardY + 12);
+
 
       doc
         .fillColor("#111827")
@@ -68,10 +108,17 @@ export async function baixarRelatorioAssistenciasPDF(req, res) {
         .text(`Loja: ${a.loja_nome}`, cardX + 15, cardY + 38)
         .text(`Produto: ${a.produto_descricao}`, cardX + 15, cardY + 53)
         .text(`Fornecedor: ${a.fornecedor}`, cardX + 15, cardY + 68)
-        .text(`Status: ${a.status}`, cardX + 15, cardY + 83)
         .text(`Defeito: ${a.defeito}`, cardX + 15, cardY + 98, {
           width: cardWidth - 30,
         });
+        
+        doc
+          .fillColor(statusColor[a.status] || "#111827")
+          .font("Helvetica-Bold")
+          .text(a.status, 430, cardY + 15);
+
+        doc.font("Helvetica");
+
 
       doc.y = cardY + cardHeight + 15;
     });
@@ -84,8 +131,16 @@ export async function baixarRelatorioAssistenciasPDF(req, res) {
         "AssistControl - Relatório gerado automaticamente",
         40,
         780,
-        { align: "center" }
+        { align: "center" }    
       );
+
+    doc
+      .text(
+        `Página ${doc.bufferedPageRange().start + 1}`,
+        40,
+        780,
+        { align: "right"}
+      )
 
 
     doc.end();
