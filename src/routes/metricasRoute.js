@@ -1,6 +1,5 @@
 import express from "express";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-import { adminMiddleware } from "../middlewares/adminMiddleware.js";
 import { getTotalAssistenciaController, 
     getAssistenciasPorStatusController,
     getAssistenciasPorLojaController,
@@ -13,72 +12,73 @@ import { getTotalAssistenciaController,
     getProdutosComMaisAssistenciasController,
     getTaxaConclusaoController
 } from "../controllers/metricasController.js";
+import { permissionTypes } from "../middlewares/permissionMiddleware.js";
 
 const router = express.Router();
 
 router.get('/total',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getTotalAssistenciaController
 )
 
 router.get('/status',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getAssistenciasPorStatusController
 )
 
 router.get('/lojas',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getAssistenciasPorLojaController
 )
 
 router.get('/fornecedores',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getAssistenciasPorFornecedorController
 )
 
 router.get('/tempo-medio',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getTempoMedioResolucaoController
 )
 
 router.get('/valor-parado',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getValorTotalParadoController
 )
 
 router.get('/atrasadas',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getAssistenciasAtrasadasController
 )
 
 router.get('/mensal',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getAssistenciasPorMesController
 )
 
 router.get('/valor-parado-fornecedor',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getValorPorFornecedorController
 )
 
 router.get('/produtos-mais-assistencias',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getProdutosComMaisAssistenciasController
 )
 
 router.get('/taxa-conclusao',
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getTaxaConclusaoController
 )
 

@@ -4,9 +4,9 @@ import { getProdutosController,
     produtoController, 
     updateProdutoController, 
     deleteProdutoController } from '../controllers/produtoController.js';
-import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { produtoValidator } from '../validators/produtoValidator.js';
 import { validationMiddleware } from '../middlewares/validationMiddleware.js';
+import { permissionTypes } from '../middlewares/permissionMiddleware.js';
 
 
 const router = express.Router();
@@ -18,7 +18,7 @@ router.get("/produtos",
 
 router.post("/cadastro-produto",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     produtoValidator,
     validationMiddleware,
     produtoController
@@ -26,14 +26,14 @@ router.post("/cadastro-produto",
 
 router.put("/atualizar-produto/:produtoID",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     validationMiddleware,
     updateProdutoController
 )
 
 router.delete("/deletar-produto/:produtoID",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     deleteProdutoController
 )
 

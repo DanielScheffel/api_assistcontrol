@@ -5,8 +5,8 @@ import { deleteSupplierController,
     getSuppliersController, 
     supplierController, 
     updateSupplierController } from '../controllers/supplierController.js';
-import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { supplierValidator } from '../validators/supplierValidator.js';
+import { permissionTypes } from '../middlewares/permissionMiddleware.js';
 import { validationMiddleware } from '../middlewares/validationMiddleware.js';
 
 
@@ -24,7 +24,7 @@ router.get("/:id",
 
 router.post("/novo-fornecedor",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     supplierValidator,
     validationMiddleware,
     supplierController
@@ -32,13 +32,13 @@ router.post("/novo-fornecedor",
 
 router.put("/atualizar-fornecedor/:supplierID",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     updateSupplierController
 )
 
 router.delete("/deletar-fornecedor/:supplierID",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     deleteSupplierController
 )
 

@@ -61,11 +61,12 @@ export async function gerarEtiqueta(assistencia, res) {
     campo('SKU', assistencia.sku);
 
     // CÓDIGO DE BARRAS
-    if (assistencia.codigo_gtin_ean) {
+    const codigoBarra = assistencia.codigo_gtin_ean || assistencia.sku;
+    if (codigoBarra) {
 
         const barcode = await bwipjs.toBuffer({
             bcid: 'code128',
-            text: assistencia.codigo_gtin_ean,
+            text: String(codigoBarra),
             scale: 2.5,
             height: 12,
             includetext: true,

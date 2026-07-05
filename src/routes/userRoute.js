@@ -6,26 +6,27 @@ import { deleteUserController,
     updateUserController, 
     userController } from '../controllers/userController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
-import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { cadastroUsuarioValidator } from '../validators/userValidator.js';
 import { validationMiddleware } from '../middlewares/validationMiddleware.js';
+import { permissionTypes } from '../middlewares/permissionMiddleware.js';
 
 const router = express.Router();
 
 router.get("/usuarios",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getUsersController
 )
 
 router.get("/:id",
     authMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getUserByIdController
 )
 
 router.post("/cadastro-usuario",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     cadastroUsuarioValidator,
     validationMiddleware,
     userController
@@ -33,19 +34,19 @@ router.post("/cadastro-usuario",
 
 router.put("/atualizar-usuario/:userID",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     updateUserController
 )
 
 router.put("/atualizar-status/:userID",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     updateStatusUserController
 )
 
 router.delete("/delete-usuario/:userID",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador"),
     deleteUserController
 )
 

@@ -1,6 +1,5 @@
 import express from "express";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-import { adminMiddleware } from "../middlewares/adminMiddleware.js";
 import { assistenciaValidator } from "../validators/assistenciaValidator.js";
 import { validationMiddleware } from "../middlewares/validationMiddleware.js";
 import {
@@ -12,33 +11,34 @@ import {
 } from "../controllers/assistenciaController.js";
 
 import { upload } from "../middlewares/uploadMiddleware.js";
+import { permissionTypes } from "../middlewares/permissionMiddleware.js";
 
 const router = express.Router();
 
 router.get(
   "/lista-assistencia",
   authMiddleware,
-  adminMiddleware,
+  permissionTypes("Administrador", "Gerente", "Funcionario"),
   getAssistenciaListController,
 );
 
 router.get("/search",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente", "Funcionario"),
     getSearchAssistenciaController
 )
 
 router.get(
   "/:id",
   authMiddleware,
-  adminMiddleware,
+  permissionTypes("Administrador", "Gerente", "Funcionario"),
   getAssistenciaByIdController,
 );
 
 router.post(
   "/cadastro-assistencia",
   authMiddleware,
-  adminMiddleware,
+  permissionTypes("Administrador", "Gerente", "Funcionario"),
   upload.array("imagens", 5),
   assistenciaValidator,
   validationMiddleware,
@@ -48,7 +48,7 @@ router.post(
 router.patch(
   "/atualizar-status-assistencia/:id",
   authMiddleware,
-  adminMiddleware,
+  permissionTypes("Administrador", "Gerente", "Funcionario"),
   updateStatusAssistenciaController,
 );
 

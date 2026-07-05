@@ -35,8 +35,9 @@ export async function getUserByIdController(req, res) {
 export async function userController(req, res) {
     
     const { nome, email, senha, tipo_usuario } = req.body;
+    const usuarioLogado = req.user;
 
-    const result = await userModel(nome, email, senha, tipo_usuario);
+    const result = await userModel(nome, email, senha, tipo_usuario, usuarioLogado);
 
     return res.status(201).json(result);
 }

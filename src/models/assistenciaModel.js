@@ -190,6 +190,7 @@ export async function getAssistenciaById(assistenciaID) {
             p.id_produto,
             p.sku,
             p.descricao AS produto_descricao,
+            p.codigo_gtin_ean,
 
             c.categoria,
 

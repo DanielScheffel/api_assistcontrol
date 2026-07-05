@@ -1,13 +1,13 @@
 import express from 'express';
 
 import { authMiddleware } from '../middlewares/authMiddleware.js';
-import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 import { lojaValidator } from '../validators/lojaValidator.js';
 import { validationMiddleware } from '../middlewares/validationMiddleware.js';
 import { deleteLojaController, 
     getLojasController, 
     lojaController, 
     updateLojaController } from '../controllers/lojaController.js';
+import { permissionTypes } from '../middlewares/permissionMiddleware.js';
 
 const router = express.Router();
 
@@ -18,7 +18,7 @@ router.get("/lojas",
 
 router.post("/loja/nova-loja",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     lojaValidator,
     validationMiddleware,
     lojaController
@@ -26,13 +26,13 @@ router.post("/loja/nova-loja",
 
 router.put("/loja/editar-loja/:id_loja",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     updateLojaController
 )
 
 router.delete("/loja/deletar-loja/:id_loja",
     authMiddleware,
-    adminMiddleware,
+    permissionTypes("Administrador", "Gerente"),
     deleteLojaController
 )
 
